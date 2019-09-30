@@ -1,9 +1,12 @@
 package ku.shop;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -23,7 +26,18 @@ public class BuyStepdefs {
         catalog.addProduct(name, price);
     }
 
-    @When("I buy (.+) with quantity (.+)")
+    @Given("the following products exist:")
+    public void the_following_products_exist(DataTable table){
+        Map<String,Double> data = table.asMap(String.class, Double.class);
+
+        for (String name : data.keySet()) {
+            double price = data.get(name);
+            catalog.addProduct(name, price);
+        }
+
+    }
+
+    @When("ฉันซื้อ (.+) with quantity (.+)")
     public void i_buy_with_quantity(String name, int quant) {
         Product prod = catalog.getProduct(name);
         order.addItem(prod, quant);
